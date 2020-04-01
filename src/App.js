@@ -4,9 +4,9 @@ import Main from './components/MainComponent';
 import './App.css';
 import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {configureStore} from './reducer/configureStore';
+import {ConfigureStore} from './reducer/configureStore';
 
-const store = configureStore();
+const store = ConfigureStore();
 
 class App extends Component{
 

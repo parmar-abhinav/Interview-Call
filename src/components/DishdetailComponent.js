@@ -1,6 +1,74 @@
 import React, {Component} from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import {Button, Modal, ModalHeader, ModalBody, Label, Row, Col} from 'reactstrap';
+import {Control, LocalForm, Errors} from 'react-redux-form';
+
+
+class CommentForm extends Component
+{
+    constructor(props)
+    {
+        super(props)
+        this.state={
+            modal: false
+        }
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+    }
+
+    toggleModal(event)
+    {
+        this.setState({
+            modal: !this.state.modal
+        })
+    }
+
+    handleSubmit(values){
+        alert("Current state is: " + JSON.stringify(values));
+    }
+    render(){
+
+        const minLength = (len) => (val) => (val) && (val.length>=len)
+        const maxLength = (len) => (val) => !(val) || (val.length<=len)
+        return(
+            <div>
+                <Button outline onClick = {this.toggleModal}><span className="fa fa-pencil fa-lg"></span> Submit Comment</Button>
+                <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+                    <ModalBody>
+                        <div className="container">
+                        <LocalForm onSubmit = {(values) => this.handleSubmit(values)}>
+                            <Row className="form-group">
+                                <Label htmlFor="rating">Rating</Label>
+                                    <Control.select model=".rating" id="rating" name="rating" className="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                    </Control.select>
+                            </Row>
+                            <Row className="form-group">
+                                <Label htmlFor="author">Your Name</Label>
+                                <Control.text model=".author" id="author" name="author" className="form-control" placeholder="Your Name" validators={{minLength: minLength(3), maxLength: maxLength(15)}} />
+                                <Errors className="text-danger" model=".author" show="touched" messages={{minLength: "Must be greater than 2 characters", maxLength: "Must be 15 characters or less"}}></Errors>
+                            </Row>
+                            <Row className="form-group">
+                                <Label htmlFor="comment">Comment</Label>
+                                <Control.textarea model=".comment" id="comment" name="comment" className="form-control" rows="6" />
+                            </Row>
+                            <Row>
+                            <Button type="submit" value="submit" color="primary">Submit</Button>
+                            </Row>
+                        </LocalForm>
+                        </div>
+                    </ModalBody>
+                </Modal>
+            </div>
+        );
+    }
+}
 
     function RenderDish({dish}) {
         if(dish!=null)
@@ -42,6 +110,7 @@ import { Link } from 'react-router-dom';
                 <div>
                     <h4>Comments</h4>
                     {Comment}
+                    <CommentForm />
                 </div>
             );
         }
